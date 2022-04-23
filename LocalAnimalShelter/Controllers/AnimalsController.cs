@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,26 @@ namespace LocalAnimalShelter.Controllers
 
     // GET: api/Animals
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Animal>>> Get()
+    public async Task<ActionResult<IEnumerable<Animal>>> Get(string species, string gender, string name)
     {
-      return await _db.Animals.ToListAsync();
+      var query = _db.Animals.AsQueryable();
+
+      if (species != null)
+      {
+        query = query.Where(entry => entry.Species == species);
+      }
+
+      if (gender != null)
+      {
+        query = query.Where(entry => entry.Gender == gender);
+      }    
+
+      if (name != null)
+      {
+        query = query.Where(entry => entry.Name == name);
+      }      
+
+      return await query.ToListAsync();
     }
 
     // GET: api/Animals/5
